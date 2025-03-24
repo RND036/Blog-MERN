@@ -1,10 +1,19 @@
-import { Button, ButtonGroup, Navbar, TextInput } from "flowbite-react";
-import { Link,useLocation } from "react-router-dom"; //go to the page without refreshing page
+import {
+  Button,
+  ButtonGroup,
+  Dropdown,
+  Navbar,
+  TextInput,
+  Avatar,
+} from "flowbite-react";
+import { Link, useLocation } from "react-router-dom"; //go to the page without refreshing page
 import { AiOutlineSearch } from "react-icons/ai";
 import { FaMoon } from "react-icons/fa";
+import { useSelector } from "react-redux"; // using this to identify user autheticated or not
 
 export default function Header() {
-  const path = useLocation().pathname;// to mark the path of the location in hamberger menu
+  const path = useLocation().pathname; // to mark the path of the location in hamberger menu
+  const { currentUser } = useSelector((state) => state.user); // using this to identify user autheticated or not
   return (
     <Navbar className="border-b-2">
       <Link
@@ -31,23 +40,52 @@ export default function Header() {
         <Button className="w-12 h-10 hidden sm:inline" color="gray" pill>
           <FaMoon />
         </Button>
-        <Link to="/signin">
-          <Button gradientDuoTone="purpleToBlue" outline>Sign In</Button>
-        </Link>
-        <Navbar.Toggle/>
-       
+        {currentUser ? (
+          <Dropdown
+            arrowIcon={false}
+            inline
+            label={
+              <Avatar alt="user" img={currentUser.profilePicture} rounded />
+            }
+          >
+            <Dropdown.Header>
+              <span className="block text-sm">@{currentUser.username}</span>
+              <span className="block text-sm font-medium truncate">{currentUser.email}</span>
+
+            </Dropdown.Header>
+            <Link to={'/dashboard?tab=profile'}>
+              <Dropdown.Item>Profile</Dropdown.Item>
+            </Link>
+            <Dropdown.Divider/>
+            <Dropdown.Item>Sign Out</Dropdown.Item>
+            
+          </Dropdown>
+        ) : (
+          <Link to="/signin">
+            <Button gradientDuoTone="purpleToBlue" outline>
+              Sign In
+            </Button>
+          </Link>
+        )}
+
+        <Navbar.Toggle />
       </div>
-      <Navbar.Collapse> 
-          <Navbar.Link active={path === '/'} as={'div'} /*cant use two link in a same one thats why use div in here*/>   
-            <Link to="/">Home</Link>
-          </Navbar.Link>
-          <Navbar.Link active={path === '/about'} as={'div'}>
+      <Navbar.Collapse>
+        <Navbar.Link
+          active={path === "/"}
+          as={
+            "div"
+          } /*cant use two link in a same one thats why use div in here*/
+        >
+          <Link to="/">Home</Link>
+        </Navbar.Link>
+        <Navbar.Link active={path === "/about"} as={"div"}>
           <Link to="/about">About</Link>
-          </Navbar.Link>
-          <Navbar.Link active={path === '/project'} as={'div'}>
+        </Navbar.Link>
+        <Navbar.Link active={path === "/project"} as={"div"}>
           <Link to="/project">Projects</Link>
-          </Navbar.Link>
-        </Navbar.Collapse>
+        </Navbar.Link>
+      </Navbar.Collapse>
     </Navbar>
   );
 }
