@@ -1,7 +1,7 @@
 //we cant use multiple reducers in redux so we have to combine them in one store for that we have to import combine reducer
 import { configureStore ,combineReducers} from '@reduxjs/toolkit'
 import userReducer from './user/userSlice'
-import { persistReducer } from 'redux-persist';
+import { persistReducer,persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import themeReducer from './theme/themeSlice';
 
@@ -33,3 +33,4 @@ export const store = configureStore({
   })
 
 })
+export const persistor = persistStore(store);
