@@ -2,7 +2,8 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import userRoutes from './routes/user.route.js';
-import authRoutes from './routes/auth.route.js'
+import authRoutes from './routes/auth.route.js';
+import cookieParser from 'cookie-parser'; // for read the cookie
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ mongoose.connect(
 const app = express();
 
 app.use(express.json()); //allow json to input as backend 
+app.use(cookieParser()); // to read the cookie
 
 
 app.listen(3000,()=>{
